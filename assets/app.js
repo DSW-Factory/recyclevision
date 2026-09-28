@@ -71,6 +71,16 @@ async function start() {
       return;
     }
 
+    $("fpsLabel").textContent = "Cámara activa · descargando modelo RecycleVision...";
+    try {
+      await window.__RECYCLEVISION_CLOUD__.ensureModel();
+    } catch (modelError) {
+      running = false;
+      $("fpsLabel").textContent = "IA: " + String(modelError?.message || modelError).slice(0, 70);
+      alert(String(modelError?.message || modelError));
+      return;
+    }
+
     $("fpsLabel").textContent = "Cámara activa · RecycleVision listo";
     running = true;
     requestAnimationFrame(loop);
@@ -121,7 +131,8 @@ async function analyze() {
     renderDecision(data.detections);
     renderMetrics(data.metrics);
   } catch (e) {
-    $("fpsLabel").textContent = "IA: " + e.message.slice(0, 48);
+    const msg = String(e?.message || e || "Error de inferencia");
+    $("fpsLabel").textContent = "IA: " + (/Failed to fetch/i.test(msg) ? "no se pudo acceder al modelo" : msg.slice(0, 64));
   } finally {
     busy = false;
   }
