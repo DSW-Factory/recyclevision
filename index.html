@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#06130f" />
+    <title>RecycleVision — IA para una separación inteligente</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <header>
+      <div class="brand">
+        <span class="brand-mark">RV</span>
+        <div>
+          <b>Recycle<span>Vision</span></b
+          ><small>by Visual Ruptive</small>
+        </div>
+      </div>
+      <div class="live"><i></i> IA EN VIVO</div>
+      <nav class="view-tabs">
+        <button class="view-tab active" data-view="operationView">Operación</button>
+        <button class="view-tab" data-view="intelligenceView">Intelligence</button>
+        <button class="view-tab" data-view="historyView">Histórico</button>
+        <button class="view-tab carbon-tab" data-view="carbonView">Carbon Studio</button>
+      </nav>
+      <div class="header-actions">
+        <button id="advancedBtn" class="ghost advanced-trigger">
+          ⚙ Avanzada</button
+        ><button id="resetBtn" class="ghost">Reiniciar</button
+        ><button id="fullBtn" class="ghost">Pantalla completa</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-copy" id="globalHero">
+        <div>
+          <p class="eyebrow">INTELIGENCIA ARTIFICIAL APLICADA</p>
+          <h1>Del residuo a la <em>decisión correcta.</em></h1>
+        </div>
+        <p>Detección, clasificación y trazabilidad en tiempo real.</p>
+      </section>
+
+      <div id="operationView" class="app-view active">
+      <section class="stage-grid">
+        <article class="camera-card">
+          <div class="camera-head">
+            <div><span class="status-dot"></span> Cámara principal</div>
+            <span id="fpsLabel">Esperando cámara</span>
+          </div>
+          <div class="viewport" id="viewport">
+            <video id="camera" autoplay playsinline muted></video>
+            <canvas id="overlay"></canvas>
+            <div id="cameraStart" class="camera-start">
+              <div class="scan-icon"></div>
+              <h2>Activar experiencia en vivo</h2>
+              <p>La IA analizará los residuos frente a la cámara.</p>
+              <button id="startBtn">Iniciar cámara</button>
+            </div>
+            <div class="scanline"></div>
+          </div>
+        </article>
+
+        <aside class="decision-card" id="decisionCard">
+          <p class="eyebrow">DECISIÓN DE LA IA</p>
+          <div class="waiting" id="waiting">
+            <div class="radar"></div>
+            <h2>Mostrá un residuo</h2>
+            <p>La recomendación aparecerá aquí.</p>
+          </div>
+          <div class="decision hidden" id="decision">
+            <span class="material-pill" id="materialPill">Material</span>
+            <h2 id="materialName">Plástico</h2>
+            <p class="confidence">
+              <span id="confidence">94%</span> de confianza
+            </p>
+            <div class="goes-to">
+              <small>DEPOSITAR EN</small
+              ><div class="bin-row"><div class="smart-bin" id="smartBin"><span></span></div><strong id="containerName">Plásticos y metales</strong></div>
+              <div class="bin-color"><i id="containerSwatch"></i>Contenedor <b id="containerColor">amarillo</b></div>
+            </div>
+            <div class="dropoff"><small>DÓNDE DEPOSITARLO</small><strong id="dropoffName">Contenedor o Punto Verde</strong></div>
+            <p id="recommendation">Vaciar y compactar antes de depositar.</p>
+          </div>
+        </aside>
+      </section>
+      </div>
+
+      <div id="intelligenceView" class="app-view">
+        <section class="dashboard-head">
+          <div><p class="eyebrow">RECYCLEVISION INTELLIGENCE</p><h2>Centro de inteligencia circular</h2><p>Visibilidad operativa y composición del flujo en tiempo real.</p></div>
+          <div class="intelligence-live-tools"><button class="sound-toggle active" id="soundToggle" type="button" title="Activar o silenciar sonido"><span>♪</span><b>Sonido activo</b></button><div class="dashboard-live"><i></i><span>Sesión activa</span><b id="uptime">0.0 min</b></div></div>
+        </section>
+        <section class="kpi-grid">
+          <article class="kpi-feature"><span>OBJETOS ANALIZADOS</span><strong id="dashTotal">0</strong><small>detecciones únicas en esta sesión</small><div class="kpi-pulse"></div></article>
+          <article><span>RECUPERABLES</span><strong><b id="recyclable">0</b><sup> objetos</sup></strong><small id="recoverableCopy">0% del flujo observado</small></article>
+          <article><span>CONFIANZA MEDIA IA</span><strong><b id="avgConfidence">0</b><sup>%</sup></strong><small>promedio de detecciones aceptadas</small></article>
+          <article><span>DIVERSIDAD</span><strong><b id="variety">0</b><sup> tipos</sup></strong><small id="topMaterial">Principal: Sin datos</small></article>
+        </section>
+        <section class="intel-grid">
+          <article class="intel-card composition-card"><div class="card-title"><div><span>COMPOSICIÓN DEL FLUJO</span><h3>Materiales detectados</h3></div><small>OBJETOS · EN VIVO</small></div><div id="compositionChart" class="composition-chart"><div class="empty-chart">Esperando detecciones</div></div></article>
+          <article class="intel-card flow-card"><div class="card-title"><div><span>ACTIVIDAD</span><h3>Flujo de detección</h3></div><b id="dashRate">0/min</b></div><svg id="flowChart" viewBox="0 0 600 180" preserveAspectRatio="none"><defs><linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#69ed9a" stop-opacity=".4"/><stop offset="1" stop-color="#69ed9a" stop-opacity="0"/></linearGradient></defs><path class="flow-area" d="M0 180 L600 180 Z"/><polyline class="flow-line" points="0,170 600,170"/></svg><div class="flow-legend"><span>Inicio de sesión</span><span>Ahora</span></div></article>
+          <article class="intel-card destination-card"><div class="card-title"><div><span>DESTINO RECOMENDADO</span><h3>Distribución por contenedor</h3></div></div><div id="containerChart" class="container-chart"><div class="empty-chart">Sin clasificaciones</div></div><p class="method-note">Recomendación configurable según normativa municipal.</p></article>
+          <article class="intel-card events-card"><div class="card-title"><div><span>TRAZABILIDAD</span><h3>Últimas detecciones</h3></div><small id="eventCount">0 EVENTOS</small></div><div id="eventsFeed" class="events-feed"><div class="empty-chart">Mostrá un residuo para iniciar</div></div></article>
+        </section>
+      </div>
+
+      <div id="historyView" class="app-view">
+        <section class="dashboard-head history-head">
+          <div><p class="eyebrow">HISTÓRICO E IMPACTO</p><h2>Inteligencia que permanece</h2><p>Desempeño acumulado con datos reales guardados por RecycleVision.</p></div>
+          <div class="period-filter" id="periodFilter"><button data-days="7" class="active">7D</button><button data-days="30">30D</button><button data-days="90">90D</button><button data-days="365">1A</button></div>
+        </section>
+        <section class="history-kpis">
+          <article><span>DETECCIONES DEL PERÍODO</span><strong id="historyTotal">0</strong><div class="trend neutral" id="historyTrend">Sin período anterior</div></article>
+          <article><span>RECUPERACIÓN POTENCIAL</span><strong><b id="historyRecovery">0</b><sup>%</sup></strong><small id="historyRecovered">0 objetos recuperables</small></article>
+          <article><span>CONFIANZA MEDIA</span><strong><b id="historyConfidence">0</b><sup>%</sup></strong><small>detecciones aceptadas por la IA</small></article>
+          <article><span>MATERIAL PRINCIPAL</span><strong class="text-kpi" id="historyTop">Sin datos</strong><small id="historyPeak">Esperando actividad</small></article>
+        </section>
+        <section class="history-grid">
+          <article class="intel-card history-timeline"><div class="card-title"><div><span>EVOLUCIÓN TEMPORAL</span><h3>Detecciones por día</h3></div><small id="historyRange">ÚLTIMOS 7 DÍAS</small></div><div id="historyBars" class="history-bars"></div></article>
+          <article class="intel-card impact-ring-card"><div class="card-title"><div><span>IMPACTO DEL FLUJO</span><h3>Recuperables vs. rechazo</h3></div></div><div class="impact-ring-wrap"><div class="impact-ring" id="impactRing"><div><strong id="ringRate">0%</strong><small>recuperable</small></div></div><div class="impact-legend"><span><i class="recoverable-dot"></i>Recuperables <b id="ringRecoverable">0</b></span><span><i class="reject-dot"></i>Rechazo <b id="ringReject">0</b></span></div></div></article>
+          <article class="intel-card history-materials"><div class="card-title"><div><span>COMPOSICIÓN HISTÓRICA</span><h3>Participación por material</h3></div></div><div id="historyComposition" class="composition-chart"><div class="empty-chart">Sin datos históricos</div></div></article>
+          <article class="intel-card history-destinations"><div class="card-title"><div><span>DESTINOS</span><h3>Contenedores recomendados</h3></div></div><div id="historyContainers" class="container-chart"><div class="empty-chart">Sin datos históricos</div></div><p class="method-note">Datos persistentes · esquema configurable por municipio.</p></article>
+        </section>
+      </div>
+
+      <div id="carbonView" class="app-view">
+        <section class="carbon-hero">
+          <div><p class="eyebrow">RECYCLEVISION CARBON STUDIO</p><h2>Del residuo al <em>impacto climático.</em></h2><p>Escenarios comparativos, factores trazables e incertidumbre visible.</p><button class="carbon-explain-trigger" id="explainCarbonBtn" type="button">ⓘ ¿Qué estamos midiendo?</button></div>
+          <div class="carbon-period" id="carbonPeriod"><button data-days="7">7D</button><button data-days="30" class="active">30D</button><button data-days="90">90D</button><button data-days="365">1A</button></div>
+        </section>
+        <section class="carbon-score-grid">
+          <article class="carbon-score"><span>EMISIONES POTENCIALMENTE EVITADAS</span><div><strong id="carbonTotal">0.000</strong><b>kg CO₂e</b></div><p id="carbonRange">Rango estimado: 0.000–0.000 kg CO₂e</p><div class="carbon-wave"></div></article>
+          <article><span>MASA ESTIMADA</span><strong><b id="carbonMass">0.000</b><sup> kg</sup></strong><small>según pesos promedio por objeto</small></article>
+          <article><span>OBJETOS MODELADOS</span><strong id="carbonObjects">0</strong><small id="carbonCoverage">0 sin factor aplicable</small></article>
+          <article><span>CALIDAD DEL DATO</span><strong class="quality-grade">C</strong><small>Peso promedio · rango de incertidumbre</small></article>
+        </section>
+        <aside class="carbon-summary-note"><div class="carbon-summary-icon">CO₂e</div><div><strong>Medimos una diferencia entre escenarios</strong><p>No medimos gases con la cámara. Estimamos cuánto cambia la huella climática si un residuo se recicla o composta en lugar de enviarse a disposición final.</p></div><button id="explainCarbonInline" type="button">Ver cómo se calcula →</button></aside>
+        <section class="climate-visuals">
+          <article class="intel-card climate-timeline"><div class="card-title"><div><span>EVOLUCIÓN DEL IMPACTO</span><h3>Pulso climático acumulado</h3></div><small>kg CO₂e evitados</small></div><div class="climate-chart-wrap"><svg id="climateChart" viewBox="0 0 700 230" preserveAspectRatio="none"><defs><linearGradient id="climateArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#70e6ff" stop-opacity=".45"/><stop offset="1" stop-color="#70e6ff" stop-opacity="0"/></linearGradient></defs><path id="climateAreaPath" class="climate-area" d="M0 210 L700 210 Z"/><polyline id="climateLine" class="climate-line" points="0,210 700,210"/></svg><div class="climate-axis"><span id="climateFrom">Inicio</span><b id="climatePeak">Pico: 0 kg</b><span>Ahora</span></div></div></article>
+          <article class="intel-card climate-donut-card"><div class="card-title"><div><span>COMPOSICIÓN</span><h3>Quién genera el impacto</h3></div></div><div class="climate-donut-layout"><div class="climate-donut" id="climateDonut"><div><strong id="donutTotal">0</strong><small>kg CO₂e</small></div></div><div id="climateLegend" class="climate-legend"></div></div></article>
+          <article class="intel-card scenario-card"><div class="card-title"><div><span>ESCENARIOS</span><h3>El cambio que proponemos</h3></div><small>comparación modelada</small></div><div class="scenario-visual"><div><span>Disposición final</span><b id="baselineValue">0 kg</b><i><em id="baselineBar"></em></i></div><div><span>Reciclaje / compostaje</span><b id="alternativeValue">0 kg</b><i><em id="alternativeBar"></em></i></div></div><div class="scenario-saving"><span>BRECHA CLIMÁTICA</span><strong><b id="scenarioSaving">0</b> kg CO₂e</strong></div></article>
+          <article class="intel-card projection-card"><div class="projection-orbit"><i></i><i></i><i></i><div><span>PROYECCIÓN</span><strong id="projectionValue">0</strong><small>kg CO₂e / 1.000 objetos</small></div></div><p>Proyección lineal basada en el promedio observado. No es una predicción ni una certificación.</p></article>
+        </section>
+        <section class="carbon-grid">
+          <article class="intel-card carbon-breakdown"><div class="card-title"><div><span>CONTRIBUCIÓN CLIMÁTICA</span><h3>Impacto evitado por material</h3></div><small>kg CO₂e</small></div><div id="carbonMaterialChart" class="carbon-material-chart"><div class="empty-chart">Las detecciones aparecerán aquí</div></div></article>
+          <article class="intel-card carbon-calculator"><div class="card-title"><div><span>WIZARD DE HUELLA</span><h3>Calculadora guiada</h3></div><small>4 PASOS</small></div>
+            <div class="wizard-progress" id="wizardProgress"><i class="active"></i><i></i><i></i><i></i></div>
+            <form id="carbonForm">
+              <section class="wizard-step active" data-step="0"><b>Paso 1 · Elegí el residuo</b><p>Seleccioná el material que querés analizar.</p><label><span>Residuo</span><select id="carbonLabel"></select></label><button class="wizard-next" type="button">Continuar →</button></section>
+              <section class="wizard-step" data-step="1"><b>Paso 2 · Indicá el peso</b><p>El peso real mejora la calidad de la estimación.</p><label><span>Peso real</span><div class="unit-input"><input id="carbonWeight" type="number" min="0.001" step="0.001" value="1"><b>kg</b></div></label><div class="wizard-actions"><button class="wizard-back" type="button">← Atrás</button><button class="wizard-next" type="button">Continuar →</button></div></section>
+              <section class="wizard-step" data-step="2"><b>Paso 3 · Compará destinos</b><p>Definí qué sucede hoy y cuál sería la alternativa.</p><div class="scenario-pair"><label><span>Escenario actual</span><select id="carbonBaseline"><option value="landfilling">Relleno sanitario</option><option value="combustion">Incineración</option></select></label><i>→</i><label><span>Escenario alternativo</span><select id="carbonAlternative"></select></label></div><div class="wizard-actions"><button class="wizard-back" type="button">← Atrás</button><button class="wizard-next" type="button">Revisar →</button></div></section>
+              <section class="wizard-step" data-step="3"><b>Paso 4 · Resultado</b><p id="wizardReview">Revisá los datos y calculá el impacto comparativo.</p><div class="wizard-actions"><button class="wizard-back" type="button">← Atrás</button><button type="submit">Calcular impacto</button></div></section>
+            </form>
+            <div class="carbon-result hidden" id="carbonResult"><small>IMPACTO COMPARATIVO</small><strong><b id="manualCarbon">0</b> kg CO₂e</strong><p id="manualNarrative"></p></div>
+          </article>
+          <article class="intel-card methodology-card"><div class="card-title"><div><span>TRAZABILIDAD METODOLÓGICA</span><h3>Cómo se calculó</h3></div><b class="verified-badge">FACTOR VERSIONADO</b></div><div class="methodology-flow"><div><i>01</i><span>Actividad</span><b>Masa del residuo</b></div><div><i>02</i><span>Escenario base</span><b>Relleno sanitario</b></div><div><i>03</i><span>Alternativa</span><b>Reciclaje/compost</b></div><div><i>04</i><span>Resultado</span><b>Diferencia de CO₂e</b></div></div><div class="source-card"><span>FUENTE ACTIVA</span><strong>US EPA · WARM v16</strong><p>Factores publicados en diciembre de 2023 · referencia internacional.</p></div></article>
+          <article class="intel-card carbon-disclosure"><div class="shield-icon">✓</div><h3>Impacto con contexto</h3><p id="carbonDisclosure">Estimación comparativa de emisiones evitadas; no constituye inventario, certificación ni crédito de carbono.</p><ul><li>Supuestos visibles</li><li>Factores con fuente y versión</li><li>Rango de incertidumbre</li><li>Escenario base declarado</li></ul></article>
+        </section>
+      </div>
+
+      <section class="metrics" id="operationMetrics">
+        <article>
+          <span>RESIDUOS DETECTADOS</span><strong id="total">0</strong
+          ><small>objetos únicos</small>
+        </article>
+        <article>
+          <span>RITMO PROMEDIO</span
+          ><strong><b id="rate">0</b><sup>/min</sup></strong
+          ><small>procesamiento actual</small>
+        </article>
+        <article>
+          <span>RECUPERACIÓN POTENCIAL</span
+          ><strong><b id="recovery">0</b><sup>%</sup></strong
+          ><small>material valorizable</small>
+        </article>
+        <article class="distribution">
+          <span>DISTRIBUCIÓN POR MATERIAL</span>
+          <div id="bars" class="bars">
+            <small>Los datos aparecerán en vivo</small>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <span>RECYCLEVISION · VISUAL RUPTIVE</span
+      ><span>Computer Vision para una economía circular medible</span>
+    </footer>
+    <div class="drawer-backdrop" id="drawerBackdrop"></div>
+    <div class="carbon-modal-backdrop" id="carbonModalBackdrop" aria-hidden="true"></div>
+    <button class="consultant-fab" id="consultantFab" type="button"><span>✦</span><b>Asesor IA</b></button>
+    <aside class="consultant-panel" id="consultantPanel" aria-hidden="true"><header><div><span>✦ ASESOR AMBIENTAL</span><h3>Consultá a RecycleVision</h3></div><button id="closeConsultant" type="button">×</button></header><div class="consultant-status"><i></i> Disponible en RecycleVision Cloud · modo privado del navegador</div><div class="consultant-messages" id="consultantMessages"><article class="bot-message">Hola, Pablo. Puedo explicar la huella de carbono o decirte dónde depositar cada residuo.<small>Asesor local RecycleVision</small></article></div><div class="consultant-chips"><button type="button">¿Dónde tiro un plástico?</button><button type="button">¿Qué significa CO₂e?</button><button type="button">¿Cómo se calcula la huella?</button></div><form id="consultantForm"><input id="consultantInput" maxlength="500" placeholder="Escribí tu consulta…" autocomplete="off"><button type="submit" aria-label="Enviar">↑</button></form><p class="consultant-note">Orientación informativa. Las reglas pueden variar según el municipio.</p></aside>
+    <section class="carbon-explainer" id="carbonExplainer" role="dialog" aria-modal="true" aria-labelledby="carbonExplainerTitle" aria-hidden="true">
+      <div class="carbon-explainer-head"><div><p class="eyebrow">METODOLOGÍA EXPLICADA</p><h2 id="carbonExplainerTitle">¿Qué estamos midiendo?</h2></div><button class="close-btn" id="closeCarbonExplainer" type="button" aria-label="Cerrar">×</button></div>
+      <p class="carbon-lead">RecycleVision <strong>no mide CO₂ directamente con la cámara</strong>. Calcula una estimación comparativa del impacto asociado al destino del residuo.</p>
+      <div class="carbon-formula"><span>Escenario base</span><b>Relleno sanitario</b><i>−</i><span>Escenario alternativo</span><b>Reciclaje o compostaje</b><strong>= kg CO₂e potencialmente evitados</strong></div>
+      <div class="carbon-explain-steps"><article><i>01</i><b>Reconocemos</b><p>La cámara identifica el tipo de residuo.</p></article><article><i>02</i><b>Estimamos la masa</b><p>Usamos un peso promedio o el peso real ingresado.</p></article><article><i>03</i><b>Comparamos</b><p>Aplicamos factores climáticos a dos destinos posibles.</p></article><article><i>04</i><b>Mostramos el impacto</b><p>La diferencia se expresa en kg de CO₂ equivalente.</p></article></div>
+      <div class="carbon-explain-grid"><article><h3>¿Qué significa CO₂e?</h3><p>“Dióxido de carbono equivalente” permite expresar en una unidad común el efecto de distintos gases de efecto invernadero.</p><h3>Calidad de la estimación</h3><ul><li><b>A</b> Peso real ingresado.</li><li><b>B</b> Peso medido o dato específico validado.</li><li><b>C</b> Peso promedio por objeto, con rango de incertidumbre.</li></ul></article><article class="carbon-example"><span>EJEMPLO ILUSTRATIVO</span><h3>Una botella PET</h3><p>Detección → masa estimada → relleno sanitario versus reciclaje → impacto comparativo.</p><small>El resultado depende del peso, material, escenario y factor vigente; no es un valor universal por botella.</small></article></div>
+      <div class="carbon-boundary"><h3>Lo que este indicador no representa</h3><p>No es una medición directa de gases, un inventario corporativo, una certificación, una compensación ni un crédito de carbono.</p></div>
+      <div class="carbon-explainer-foot"><p><span>FUENTE METODOLÓGICA</span><strong>US EPA · WARM v16 · diciembre de 2023</strong></p><button id="understoodCarbonExplainer" type="button">Entendido</button></div>
+    </section>
+    <aside class="advanced-drawer" id="advancedDrawer" aria-hidden="true">
+      <div class="drawer-head">
+        <div>
+          <p class="eyebrow">CONFIGURACIÓN EN VIVO</p>
+          <h2>Avanzada</h2>
+        </div>
+        <button id="closeAdvanced" class="close-btn">×</button>
+      </div>
+      <p class="drawer-intro">
+        Ajustá el comportamiento de la IA sin reiniciar RecycleVision.
+      </p>
+      <form id="advancedForm">
+        <label class="setting"
+          ><span
+            ><b>Confianza mínima</b
+            ><small>Más bajo detecta más, pero puede equivocarse.</small></span
+          ><output id="confidenceValue">22%</output
+          ><input id="confidenceInput" type="range" min="5" max="90" step="1"
+        /></label>
+        <label class="setting"
+          ><span
+            ><b>Frecuencia de análisis</b
+            ><small>Intervalo entre fotogramas enviados a la IA.</small></span
+          ><output id="intervalValue">650 ms</output
+          ><input
+            id="intervalInput"
+            type="range"
+            min="300"
+            max="3000"
+            step="50"
+        /></label>
+        <label class="setting"
+          ><span
+            ><b>Resolución del modelo</b
+            ><small
+              >Más resolución mejora objetos pequeños, pero consume más.</small
+            ></span
+          ><select id="imageSizeInput">
+            <option value="320">320 · Muy rápido</option>
+            <option value="480">480 · Equilibrado</option>
+            <option value="640">640 · Alta precisión</option>
+            <option value="800">800 · Máxima calidad</option>
+          </select></label
+        >
+        <label class="setting"
+          ><span
+            ><b>Máximo de detecciones</b
+            ><small>Límite de objetos simultáneos por imagen.</small></span
+          ><input
+            id="maxDetectionsInput"
+            class="number-input"
+            type="number"
+            min="1"
+            max="50"
+        /></label>
+        <label class="setting"
+          ><span
+            ><b>Memoria del objeto</b
+            ><small>Segundos antes de volver a contabilizarlo.</small></span
+          ><output id="ttlValue">2.5 s</output
+          ><input id="ttlInput" type="range" min="0.5" max="15" step="0.5"
+        /></label>
+        <label class="setting"
+          ><span
+            ><b>Coincidencia de seguimiento</b
+            ><small
+              >Cuánto deben superponerse dos cajas para ser el mismo
+              objeto.</small
+            ></span
+          ><output id="iouValue">25%</output
+          ><input id="iouInput" type="range" min="5" max="90" step="5"
+        /></label>
+        <label class="setting switch-setting"
+          ><span
+            ><b>Mostrar cajas</b
+            ><small
+              >Oculta sólo la capa visual; la IA sigue midiendo.</small
+            ></span
+          ><input id="showBoxesInput" type="checkbox" checked /><i></i
+        ></label>
+        <div class="model-info">
+          <small>MODELO ACTIVO</small><strong id="modelName">Cargando...</strong
+          ><span id="configStatus">Configuración local</span>
+        </div>
+        <div class="drawer-actions">
+          <button type="button" id="defaultsBtn" class="ghost">Restaurar</button
+          ><button type="submit" class="save-btn">Aplicar cambios</button>
+        </div>
+      </form>
+    </aside>
+    <canvas id="capture" hidden></canvas>
+    <script type="importmap">{"imports":{"@ultralytics/yolo":"https://esm.sh/@ultralytics/yolo@0.0.41"}}</script>
+    <script type="module">
+      await import('/assets/cloud-runtime.js');
+      const script = document.createElement('script');
+      script.src = '/assets/app.js';
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
