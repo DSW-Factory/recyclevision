@@ -7,6 +7,7 @@
     <title>RecycleVision — IA para una separación inteligente</title>
     <link rel="stylesheet" href="/assets/styles.css?v=6.7.1" />
     <link rel="stylesheet" href="/assets/cloud-ui-fixes.css?v=6.7.2" />
+    <link rel="stylesheet" href="/assets/smart-fill.css?v=1.0.0" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -25,6 +26,7 @@
         <button class="view-tab" data-view="intelligenceView">Intelligence</button>
         <button class="view-tab" data-view="historyView">Histórico</button>
         <button class="view-tab carbon-tab" data-view="carbonView">Carbon Studio</button>
+        <button class="view-tab smartfill-tab" data-view="smartFillView">Smart Fill</button>
       </nav>
       <div class="header-actions">
         <button id="advancedBtn" class="ghost advanced-trigger">
@@ -158,6 +160,87 @@
           </article>
           <article class="intel-card methodology-card"><div class="card-title"><div><span>TRAZABILIDAD METODOLÓGICA</span><h3>Cómo se calculó</h3></div><b class="verified-badge">FACTOR VERSIONADO</b></div><div class="methodology-flow"><div><i>01</i><span>Actividad</span><b>Masa del residuo</b></div><div><i>02</i><span>Escenario base</span><b>Relleno sanitario</b></div><div><i>03</i><span>Alternativa</span><b>Reciclaje/compost</b></div><div><i>04</i><span>Resultado</span><b>Diferencia de CO₂e</b></div></div><div class="source-card"><span>FUENTE ACTIVA</span><strong>US EPA · WARM v16</strong><p>Factores publicados en diciembre de 2023 · referencia internacional.</p></div></article>
           <article class="intel-card carbon-disclosure"><div class="shield-icon">✓</div><h3>Impacto con contexto</h3><p id="carbonDisclosure">Estimación comparativa de emisiones evitadas; no constituye inventario, certificación ni crédito de carbono.</p><ul><li>Supuestos visibles</li><li>Factores con fuente y versión</li><li>Rango de incertidumbre</li><li>Escenario base declarado</li></ul></article>
+        </section>
+      </div>
+
+      <div id="smartFillView" class="app-view">
+        <section class="sf-hero">
+          <div>
+            <p class="eyebrow">RECYCLEVISION SMART FILL</p>
+            <h2>Nivel de llenado <em>medible.</em></h2>
+            <p>Calibración y preparación del dataset para el modelo específico <b>plastic_fill</b>.</p>
+          </div>
+          <div class="sf-mode"><i></i><span>MODO CALIBRACIÓN</span><b>Dataset en construcción</b></div>
+        </section>
+
+        <section class="sf-kpis">
+          <article><span>DIÁMETRO CONFIRMADO</span><strong>1.00<sup> m</sup></strong><small>contenedor cilíndrico</small></article>
+          <article><span>ALTURA ÚTIL</span><strong id="sfHeightDisplay">—</strong><small>falta medición de campo</small></article>
+          <article><span>NIVEL ETIQUETADO</span><strong><b id="sfLevelKpi">0</b><sup>%</sup></strong><small>muestra actual</small></article>
+          <article><span>VOLUMEN ESTIMADO</span><strong id="sfVolumeKpi">—</strong><small>requiere altura útil</small></article>
+        </section>
+
+        <section class="sf-grid">
+          <article class="intel-card sf-lab">
+            <div class="card-title">
+              <div><span>DATASET LAB</span><h3>Fotos y videos del contenedor</h3></div>
+              <small id="sfSampleCount">0 MUESTRAS</small>
+            </div>
+
+            <div class="sf-media-stage" id="sfMediaStage">
+              <video id="sfVideo" playsinline controls hidden></video>
+              <canvas id="sfCanvas"></canvas>
+              <div id="sfEmpty" class="sf-empty">
+                <strong>SF</strong>
+                <div><b>Cargá una foto o video</b><span>Usaremos el material para construir el dataset de llenado.</span></div>
+              </div>
+              <div class="sf-level-overlay" id="sfLevelOverlay"><span></span></div>
+            </div>
+
+            <div class="sf-media-actions">
+              <label class="sf-upload">+ CARGAR FOTO / VIDEO<input id="sfFileInput" type="file" accept="image/*,video/*" hidden></label>
+              <button id="sfCaptureFrame" type="button" disabled>CAPTURAR FRAME</button>
+              <button id="sfClearMedia" type="button">LIMPIAR</button>
+            </div>
+          </article>
+
+          <aside class="intel-card sf-controls">
+            <div class="card-title"><div><span>CALIBRACIÓN</span><h3>Definir llenado real</h3></div></div>
+
+            <label class="sf-field">
+              <span>DIÁMETRO INTERNO</span>
+              <div class="sf-fixed"><b>1.00</b><small>metros · confirmado</small></div>
+            </label>
+
+            <label class="sf-field">
+              <span>ALTURA ÚTIL INTERNA</span>
+              <div class="sf-input-unit"><input id="sfHeight" type="number" min="0.10" max="5" step="0.01" placeholder="Medir en campo"><b>m</b></div>
+              <small>No la estimamos: cargala cuando tengamos la medida real.</small>
+            </label>
+
+            <label class="sf-field">
+              <span>NIVEL REAL DE ESTA MUESTRA</span>
+              <div class="sf-level-value"><b id="sfLevelValue">0</b><small>%</small></div>
+              <input id="sfLevel" type="range" min="0" max="100" step="1" value="0">
+              <div class="sf-ticks"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+            </label>
+
+            <div class="sf-result" id="sfResult" data-state="normal">
+              <span>ESTADO OPERATIVO</span>
+              <strong id="sfState">NORMAL</strong>
+              <p id="sfStateCopy">Contenedor con capacidad disponible.</p>
+            </div>
+
+            <button id="sfSaveSample" class="sf-primary" type="button" disabled>GUARDAR MUESTRA ETIQUETADA</button>
+            <p class="sf-note">Esta etapa arma evidencia y etiquetas. La detección automática de <b>plastic_fill</b> se activa después de entrenar el modelo específico.</p>
+          </aside>
+        </section>
+
+        <section class="sf-method">
+          <article><i>01</i><div><b>Capturar</b><span>Fotos y frames con cámara fija.</span></div></article>
+          <article><i>02</i><div><b>Etiquetar</b><span>Nivel real de llenado por muestra.</span></div></article>
+          <article><i>03</i><div><b>Entrenar</b><span>Modelo específico plastic_fill.</span></div></article>
+          <article><i>04</i><div><b>Operar</b><span>% + volumen + estado de recolección.</span></div></article>
         </section>
       </div>
 
