@@ -219,3 +219,27 @@
     margin-left:0;
   }
 }
+
+
+/* Smart Fill upload reliability v2.0.1 */
+#sfFileInput[hidden],
+.sf-media-stage video[hidden],
+.sf-media-stage canvas[hidden]{
+  display:none !important;
+}
+#sfUploadBtn.sf-upload{
+  border:1px solid #69ed9a;
+  color:#06100b;
+  background:#69ed9a;
+}
+#sfUploadBtn.sf-upload:hover{
+  filter:brightness(1.05);
+}
+#sfUploadBtn.sf-upload:disabled{
+  opacity:.55;
+  cursor:wait;
+}
+.sf-media-stage.drag-over{
+  border-color:#69ed9a;
+  box-shadow:inset 0 0 0 2px rgba(105,237,154,.18);
+}
