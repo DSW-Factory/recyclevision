@@ -294,7 +294,7 @@
     <canvas id="capture" hidden></canvas>
     <script>
       window.__RV_RUNTIME_STATE__ = "loading";
-      window.__RV_RUNTIME_READY__ = import("/assets/cloud-runtime.js")
+      window.__RV_RUNTIME_READY__ = import("/assets/cloud-runtime.js?v=f7f09c6")
         .then(() => {
           window.__RV_RUNTIME_STATE__ = "ready";
           window.dispatchEvent(new CustomEvent("rv-runtime-ready"));
@@ -308,6 +308,6 @@
           return false;
         });
     </script>
-    <script src="/assets/app.js"></script>
+    <script src="/assets/app.js?v=f7f09c6"></script>
   </body>
 </html>
