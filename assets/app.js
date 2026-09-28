@@ -33,9 +33,17 @@ async function apiFetch(url, options = {}, allowPrompt = true) {
   return apiFetch(url, options, false);
 }
 async function start() {
+  const startBtn = $("startBtn");
   try {
+    startBtn.disabled = true;
+    startBtn.textContent = "ABRIENDO CÁMARA...";
     audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
     if (audioContext.state === "suspended") await audioContext.resume();
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+      throw new Error("Este navegador no permite acceso a cámara en esta página.");
+    }
+
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
         width: { ideal: 1280 },
@@ -44,13 +52,33 @@ async function start() {
       },
       audio: false,
     });
+
     video.srcObject = stream;
     await video.play();
     $("cameraStart").style.display = "none";
+    $("fpsLabel").textContent = "Cámara activa · cargando motor IA...";
+
+    const runtimeReady = window.__RV_RUNTIME_READY__
+      ? await window.__RV_RUNTIME_READY__
+      : Boolean(window.__RECYCLEVISION_CLOUD__);
+
+    if (!runtimeReady) {
+      running = false;
+      $("fpsLabel").textContent = "ERROR · MOTOR IA NO CARGADO";
+      const detail = window.__RV_RUNTIME_ERROR__ || "No se pudo iniciar el motor RecycleVision.";
+      alert("La cámara abrió, pero el motor IA no pudo cargarse. " + detail);
+      return;
+    }
+
+    $("fpsLabel").textContent = "Cámara activa · RecycleVision listo";
     running = true;
     requestAnimationFrame(loop);
   } catch (e) {
-    alert("No se pudo abrir la cámara. Revisá el permiso del navegador.");
+    console.error("RecycleVision camera start failed", e);
+    alert(e?.message || "No se pudo abrir la cámara. Revisá el permiso del navegador.");
+  } finally {
+    startBtn.disabled = false;
+    startBtn.textContent = "Iniciar cámara";
   }
 }
 function loop(now) {
