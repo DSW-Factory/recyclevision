@@ -292,12 +292,22 @@
       </form>
     </aside>
     <canvas id="capture" hidden></canvas>
-    <script type="importmap">{"imports":{"@ultralytics/yolo":"https://esm.sh/@ultralytics/yolo@0.0.41"}}</script>
-    <script type="module">
-      await import('/assets/cloud-runtime.js');
-      const script = document.createElement('script');
-      script.src = '/assets/app.js';
-      document.body.appendChild(script);
+    <script>
+      window.__RV_RUNTIME_STATE__ = "loading";
+      window.__RV_RUNTIME_READY__ = import("/assets/cloud-runtime.js")
+        .then(() => {
+          window.__RV_RUNTIME_STATE__ = "ready";
+          window.dispatchEvent(new CustomEvent("rv-runtime-ready"));
+          return true;
+        })
+        .catch((error) => {
+          console.error("RecycleVision runtime failed to load", error);
+          window.__RV_RUNTIME_STATE__ = "error";
+          window.__RV_RUNTIME_ERROR__ = String(error?.message || error);
+          window.dispatchEvent(new CustomEvent("rv-runtime-error", { detail: window.__RV_RUNTIME_ERROR__ }));
+          return false;
+        });
     </script>
+    <script src="/assets/app.js"></script>
   </body>
 </html>
