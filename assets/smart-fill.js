@@ -239,6 +239,7 @@
     c.hidden=false;
     $("sfVideo").hidden=true;
     $("sfEmpty").style.display="none";
+    $("sfQueueStatus").textContent=`Lista para etiquetar · ${currentName}`;
 
     resetPolygon();
     redrawCanvas();
@@ -262,6 +263,7 @@
     currentBitmap=null;
     currentName=file.name;
     currentSourceType="video";
+    $("sfQueueStatus").textContent=`Video listo · ${file.name} · elegí un instante y capturá frame`;
     resetPolygon();
     updateQueueUi();
   }
@@ -492,13 +494,66 @@ The level_percent value is stored in manifest.json for later calibration/regress
       render();
     });
 
-    $("sfFileInput").addEventListener("change",async event=>{
+    const fileInput=$("sfFileInput");
+    const uploadBtn=$("sfUploadBtn");
+
+    uploadBtn.addEventListener("click",()=>{
+      $("sfQueueStatus").textContent="Seleccioná fotos o un video...";
+      fileInput.click();
+    });
+
+    fileInput.addEventListener("change",async event=>{
       const files=[...(event.target.files||[])];
-      if(!files.length) return;
-      queue=files;
-      queueIndex=-1;
-      await loadQueueItem(0);
-      event.target.value="";
+      if(!files.length){
+        $("sfQueueStatus").textContent="No seleccionaste archivos";
+        return;
+      }
+
+      $("sfQueueStatus").textContent=`Cargando ${files.length} archivo${files.length===1?"":"s"}...`;
+      uploadBtn.disabled=true;
+
+      try{
+        queue=files;
+        queueIndex=-1;
+        await loadQueueItem(0);
+      }catch(error){
+        console.error("Smart Fill media load",error);
+        $("sfQueueStatus").textContent="ERROR AL CARGAR";
+        alert("No se pudo abrir el archivo seleccionado: "+String(error?.message||error));
+      }finally{
+        uploadBtn.disabled=false;
+        event.target.value="";
+      }
+    });
+
+    // También permite soltar fotos/videos directamente sobre el visor.
+    const dropZone=$("sfMediaStage");
+    ["dragenter","dragover"].forEach(type=>dropZone.addEventListener(type,event=>{
+      event.preventDefault();
+      dropZone.classList.add("drag-over");
+    }));
+    ["dragleave","drop"].forEach(type=>dropZone.addEventListener(type,event=>{
+      event.preventDefault();
+      dropZone.classList.remove("drag-over");
+    }));
+    dropZone.addEventListener("drop",async event=>{
+      const files=[...(event.dataTransfer?.files||[])].filter(file=>
+        file.type.startsWith("image/") || file.type.startsWith("video/")
+      );
+      if(!files.length){
+        $("sfQueueStatus").textContent="El archivo no es una foto o video compatible";
+        return;
+      }
+      $("sfQueueStatus").textContent=`Cargando ${files.length} archivo${files.length===1?"":"s"}...`;
+      try{
+        queue=files;
+        queueIndex=-1;
+        await loadQueueItem(0);
+      }catch(error){
+        console.error("Smart Fill drag/drop",error);
+        $("sfQueueStatus").textContent="ERROR AL CARGAR";
+        alert("No se pudo abrir el archivo: "+String(error?.message||error));
+      }
     });
 
     $("sfCaptureFrame").addEventListener("click",captureFrame);
