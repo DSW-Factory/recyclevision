@@ -7,7 +7,7 @@
     <title>RecycleVision — IA para una separación inteligente</title>
     <link rel="stylesheet" href="/assets/styles.css?v=6.7.1" />
     <link rel="stylesheet" href="/assets/cloud-ui-fixes.css?v=6.7.2" />
-    <link rel="stylesheet" href="/assets/smart-fill.css?v=1.0.0" />
+    <link rel="stylesheet" href="/assets/smart-fill.css?v=2.0.0" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -197,10 +197,23 @@
               <div class="sf-level-overlay" id="sfLevelOverlay"><span></span></div>
             </div>
 
+            <div class="sf-annotation-bar">
+              <div>
+                <span>SEGMENTACIÓN · plastic_fill</span>
+                <b id="sfPolygonStatus">Sin máscara</b>
+              </div>
+              <button id="sfDrawPolygon" type="button">MARCAR ZONA</button>
+              <button id="sfUndoPoint" type="button" disabled>DESHACER PUNTO</button>
+              <button id="sfClosePolygon" type="button" disabled>CERRAR POLÍGONO</button>
+              <button id="sfClearPolygon" type="button" disabled>BORRAR MÁSCARA</button>
+            </div>
+
             <div class="sf-media-actions">
-              <label class="sf-upload">+ CARGAR FOTO / VIDEO<input id="sfFileInput" type="file" accept="image/*,video/*" hidden></label>
+              <label class="sf-upload">+ CARGAR FOTOS / VIDEO<input id="sfFileInput" type="file" accept="image/*,video/*" multiple hidden></label>
               <button id="sfCaptureFrame" type="button" disabled>CAPTURAR FRAME</button>
+              <button id="sfNextMedia" type="button" disabled>SIGUIENTE</button>
               <button id="sfClearMedia" type="button">LIMPIAR</button>
+              <small id="sfQueueStatus">Sin archivos en cola</small>
             </div>
           </article>
 
@@ -231,8 +244,17 @@
               <p id="sfStateCopy">Contenedor con capacidad disponible.</p>
             </div>
 
-            <button id="sfSaveSample" class="sf-primary" type="button" disabled>GUARDAR MUESTRA ETIQUETADA</button>
-            <p class="sf-note">Esta etapa arma evidencia y etiquetas. La detección automática de <b>plastic_fill</b> se activa después de entrenar el modelo específico.</p>
+            <div class="sf-coverage">
+              <div><span>COBERTURA DEL DATASET</span><b id="sfCoverageText">0/6 estados</b></div>
+              <div id="sfCoverageBins" class="sf-coverage-bins">
+                <i data-bin="0"></i><i data-bin="25"></i><i data-bin="50"></i><i data-bin="70"></i><i data-bin="85"></i><i data-bin="100"></i>
+              </div>
+              <small>Objetivo: vacío, bajo, medio, alto, casi lleno y lleno.</small>
+            </div>
+
+            <button id="sfSaveSample" class="sf-primary" type="button" disabled>GUARDAR MUESTRA + MÁSCARA</button>
+            <button id="sfExportDataset" class="sf-secondary" type="button">EXPORTAR DATASET YOLO SEGMENTATION</button>
+            <p class="sf-note">Cada muestra guarda la imagen, el nivel real y el polígono de <b>plastic_fill</b>. El export genera imágenes, labels YOLO-Seg, manifest y data.yaml listos para entrenar.</p>
           </aside>
         </section>
 
