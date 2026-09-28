@@ -1,7 +1,7 @@
 import { YOLO } from 'https://esm.sh/@ultralytics/yolo@0.0.41';
 
 const NATIVE_FETCH = window.fetch.bind(window);
-const PRIMARY_MODEL_URL = 'https://drive.usercontent.google.com/download?id=1xmCGFDw-T9PNyClZSIY1izXgjXea1jY3&export=download&confirm=t';
+const PRIMARY_MODEL_URL = '/models/recyclevision-v1-yolo26s.onnx';
 const MODEL_LABEL = 'RecycleVision v1 YOLO26s · 29 clases';
 const HISTORY_KEY = 'rv_cloud_history_v1';
 const CONFIG_KEY = 'rv_cloud_config_v1';
@@ -88,7 +88,49 @@ function pruneTracks(){const ttl=getConfig().tracker_ttl*1000,now=Date.now();tra
 function assignTracks(items){pruneTracks();const threshold=getConfig().tracker_iou,newIds=[];const claimed=new Set();for(const item of items){let best=null,bestIoU=0;for(const t of tracks){if(claimed.has(t.id)||t.label!==item.label)continue;const score=iou(t.box,item.box);if(score>bestIoU){best=t;bestIoU=score}}if(best&&bestIoU>=threshold){best.box=item.box;best.seenAt=Date.now();item.track_id=best.id;claimed.add(best.id)}else{const t={id:nextTrackId++,label:item.label,box:item.box,seenAt:Date.now()};tracks.push(t);item.track_id=t.id;claimed.add(t.id);newIds.push(t.id)}}return new Set(newIds)}
 function decisionFor(raw){const mapped=TRAINED_MAP[raw]||raw;const rule=SPECIAL_RULES[mapped]||RULES[mapped];if(!rule)return null;const label=(SPECIAL_RULES[mapped]?raw:mapped);return {label,internal_label:raw,source:'recyclevision-v1',object_name:raw, ...rule}}
 
-async function ensureModel(){if(model)return model;if(!modelPromise){modelPromise=YOLO.load(PRIMARY_MODEL_URL,{device:'auto'}).then(m=>{model=m;return m}).catch(e=>{modelPromise=null;throw e})}return modelPromise}
+let modelLoadError = null;
+let modelRetryAt = 0;
+
+async function ensureModel(){
+  if(model) return model;
+  if(modelPromise) return modelPromise;
+
+  if(modelLoadError && Date.now() < modelRetryAt){
+    throw modelLoadError;
+  }
+
+  modelPromise=(async()=>{
+    try{
+      const response=await NATIVE_FETCH(PRIMARY_MODEL_URL,{cache:'force-cache'});
+      if(!response.ok){
+        throw new Error('No se pudo descargar el modelo RecycleVision (HTTP '+response.status+')');
+      }
+      const blob=await response.blob();
+      if(blob.size < 1000000){
+        throw new Error('El archivo del modelo RecycleVision llegó incompleto');
+      }
+      const m=await YOLO.load(blob,{device:'auto'});
+      model=m;
+      modelLoadError=null;
+      modelRetryAt=0;
+      return m;
+    }catch(error){
+      const message=String(error?.message||error||'Error desconocido');
+      const friendly=new Error(
+        /Failed to fetch/i.test(message)
+          ? 'No se pudo descargar el modelo RecycleVision desde la nube'
+          : message
+      );
+      modelLoadError=friendly;
+      modelRetryAt=Date.now()+15000;
+      throw friendly;
+    }finally{
+      modelPromise=null;
+    }
+  })();
+
+  return modelPromise;
+}
 async function dataUrlToImage(dataUrl){const blob=await (await NATIVE_FETCH(dataUrl)).blob();const url=URL.createObjectURL(blob);try{const img=new Image();img.src=url;await img.decode();return img}finally{setTimeout(()=>URL.revokeObjectURL(url),1000)}}
 
 function metrics(){const total=sessionEvents.length;const recyclable=sessionEvents.filter(x=>x.recyclable).length;const elapsed=Math.max((Date.now()-STARTED_AT)/60000,1/60);const conf=sessionEvents.map(x=>x.confidence);const materials={};const containers={};for(const e of sessionEvents){materials[e.material]=(materials[e.material]||0)+1;containers[e.container]=(containers[e.container]||0)+1}const top=Object.entries(materials).sort((a,b)=>b[1]-a[1])[0]?.[0]||'Sin datos';const timeline=Array(12).fill(0);const now=Date.now();for(const e of sessionEvents){const age=(now-new Date(e.at).getTime())/1000;const bucket=11-Math.floor(age/5);if(bucket>=0&&bucket<12)timeline[bucket]++}return{total,per_minute:+(total/elapsed).toFixed(1),recovery_rate:+(total?recyclable/total*100:0).toFixed(1),recyclable,reject:total-recyclable,avg_confidence:+(conf.length?conf.reduce((a,b)=>a+b,0)/conf.length*100:0).toFixed(1),top_material:top,material_variety:Object.keys(materials).length,uptime_minutes:+elapsed.toFixed(1),materials,containers,timeline,recent:sessionEvents.slice(-12).reverse()}}
