@@ -3,11 +3,40 @@
   "trailingSlash": false,
   "headers": [
     {
+      "source": "/models/recyclevision-v1-yolo26s.onnx",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, s-maxage=86400"
+        },
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
-        {"key": "X-Content-Type-Options", "value": "nosniff"},
-        {"key": "Referrer-Policy", "value": "strict-origin-when-cross-origin"}
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/models/recyclevision-v1-yolo26s.onnx",
+      "destination": "https://drive.usercontent.google.com/download?id=1xmCGFDw-T9PNyClZSIY1izXgjXea1jY3&export=download&confirm=t"
     }
   ]
 }
