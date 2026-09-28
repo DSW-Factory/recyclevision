@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#06130f" />
     <title>RecycleVision — IA para una separación inteligente</title>
-    <link rel="stylesheet" href="/assets/styles.css" />
+    <link rel="stylesheet" href="/assets/styles.css?v=6.7.1" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -294,7 +294,7 @@
     <canvas id="capture" hidden></canvas>
     <script>
       window.__RV_RUNTIME_STATE__ = "loading";
-      window.__RV_RUNTIME_READY__ = import("/assets/cloud-runtime.js?v=f7f09c6")
+      window.__RV_RUNTIME_READY__ = import("/assets/cloud-runtime.js?v=6.7.1")
         .then(() => {
           window.__RV_RUNTIME_STATE__ = "ready";
           window.dispatchEvent(new CustomEvent("rv-runtime-ready"));
@@ -308,6 +308,6 @@
           return false;
         });
     </script>
-    <script src="/assets/app.js?v=f7f09c6"></script>
+    <script src="/assets/app.js?v=6.7.1"></script>
   </body>
 </html>
