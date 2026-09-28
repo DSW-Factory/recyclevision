@@ -1,7 +1,7 @@
 import { YOLO } from 'https://esm.sh/@ultralytics/yolo@0.0.41';
 
 const NATIVE_FETCH = window.fetch.bind(window);
-const PRIMARY_MODEL_URL = '/models/recyclevision-v1-yolo26s.onnx';
+const PRIMARY_MODEL_URL = 'https://drive.usercontent.google.com/download?id=1xmCGFDw-T9PNyClZSIY1izXgjXea1jY3&export=download&confirm=t';
 const MODEL_LABEL = 'RecycleVision v1 YOLO26s · 29 clases';
 const HISTORY_KEY = 'rv_cloud_history_v1';
 const CONFIG_KEY = 'rv_cloud_config_v1';
