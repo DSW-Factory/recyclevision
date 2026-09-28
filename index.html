@@ -7,7 +7,7 @@
     <title>RecycleVision — IA para una separación inteligente</title>
     <link rel="stylesheet" href="/assets/styles.css?v=6.7.1" />
     <link rel="stylesheet" href="/assets/cloud-ui-fixes.css?v=6.7.2" />
-    <link rel="stylesheet" href="/assets/smart-fill.css?v=2.0.0" />
+    <link rel="stylesheet" href="/assets/smart-fill.css?v=2.0.1" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -209,7 +209,7 @@
             </div>
 
             <div class="sf-media-actions">
-              <label class="sf-upload">+ CARGAR FOTOS / VIDEO<input id="sfFileInput" type="file" accept="image/*,video/*" multiple hidden></label>
+              <button id="sfUploadBtn" class="sf-upload" type="button">+ CARGAR FOTOS / VIDEO</button><input id="sfFileInput" type="file" accept="image/*,video/*,.jpg,.jpeg,.png,.webp,.mp4,.mov,.m4v" multiple hidden>
               <button id="sfCaptureFrame" type="button" disabled>CAPTURAR FRAME</button>
               <button id="sfNextMedia" type="button" disabled>SIGUIENTE</button>
               <button id="sfClearMedia" type="button">LIMPIAR</button>
