@@ -33,10 +33,5 @@
       ]
     }
   ],
-  "rewrites": [
-    {
-      "source": "/models/recyclevision-v1-yolo26s.onnx",
-      "destination": "https://drive.usercontent.google.com/download?id=1xmCGFDw-T9PNyClZSIY1izXgjXea1jY3&export=download&confirm=t"
-    }
-  ]
+  "rewrites": []
 }

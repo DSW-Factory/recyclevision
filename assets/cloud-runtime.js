@@ -1,7 +1,13 @@
 import { YOLO } from 'https://esm.sh/@ultralytics/yolo@0.0.41';
 
 const NATIVE_FETCH = window.fetch.bind(window);
-const PRIMARY_MODEL_URL = 'https://drive.usercontent.google.com/download?id=1xmCGFDw-T9PNyClZSIY1izXgjXea1jY3&export=download&confirm=t';
+const LOCAL_MODEL_PATH = '/models/recyclevision-v1-yolo26s.onnx';
+const REMOTE_MODEL_URL = 'https://drive.usercontent.google.com/download?id=1xmCGFDw-T9PNyClZSIY1izXgjXea1jY3&export=download&confirm=t';
+const MODEL_URLS = () => {
+  const local = new URL(LOCAL_MODEL_PATH, location.href).href;
+  return [local, REMOTE_MODEL_URL].filter((url, index, all) => all.indexOf(url) === index);
+};
+const PRIMARY_MODEL_URL = LOCAL_MODEL_PATH;
 const MODEL_LABEL = 'RecycleVision v1 YOLO26s · 29 clases';
 const HISTORY_KEY = 'rv_cloud_history_v1';
 const CONFIG_KEY = 'rv_cloud_config_v1';
@@ -101,13 +107,33 @@ async function ensureModel(){
 
   modelPromise=(async()=>{
     try{
-      const response=await NATIVE_FETCH(PRIMARY_MODEL_URL,{cache:'force-cache'});
-      if(!response.ok){
-        throw new Error('No se pudo descargar el modelo RecycleVision (HTTP '+response.status+')');
+      let blob = null;
+      let lastHttpError = null;
+      for (const modelUrl of MODEL_URLS()) {
+        try {
+          const response = await NATIVE_FETCH(modelUrl, { cache: 'default', credentials: 'omit' });
+          if (!response.ok) {
+            lastHttpError = new Error('No se pudo descargar el modelo RecycleVision (HTTP ' + response.status + ')');
+            continue;
+          }
+          const candidate = await response.blob();
+          if (candidate.size < 1000000) {
+            lastHttpError = new Error('El archivo del modelo RecycleVision llegó incompleto');
+            continue;
+          }
+          const head = await candidate.slice(0, 64).text();
+          if (/^\s*<!doctype html/i.test(head) || /^\s*<html/i.test(head)) {
+            lastHttpError = new Error('El servidor devolvió HTML en lugar del modelo ONNX');
+            continue;
+          }
+          blob = candidate;
+          break;
+        } catch (attemptError) {
+          lastHttpError = attemptError;
+        }
       }
-      const blob=await response.blob();
-      if(blob.size < 1000000){
-        throw new Error('El archivo del modelo RecycleVision llegó incompleto');
+      if (!blob) {
+        throw lastHttpError || new Error('No se pudo descargar el modelo RecycleVision desde la nube');
       }
       const m=await YOLO.load(blob,{device:'auto'});
       model=m;
